@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 890420632105412048}
   m_Layer: 5
   m_Name: quitterBoutton
-  m_TagString: Untagged
+  m_TagString: NQuitterBtn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.24056602, b: 0.24056602, a: 0.9647059}
+  m_Color: {r: 0.36561054, g: 0.9811321, b: 0.41954798, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 6729849896280396057}
   m_Layer: 5
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: NVignette
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1153,7 +1153,7 @@ GameObject:
   - component: {fileID: 8346673156484099752}
   m_Layer: 5
   m_Name: InfoTxt
-  m_TagString: Untagged
+  m_TagString: NDescription
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

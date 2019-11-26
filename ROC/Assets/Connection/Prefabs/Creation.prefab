@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1781992844144687135}
   m_Layer: 5
   m_Name: ConfirmationMotDePasse
-  m_TagString: Untagged
+  m_TagString: CreationConfirmation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,7 +112,7 @@ RectTransform:
   - {fileID: 7739392098645866376}
   - {fileID: 8803265641443575357}
   m_Father: {fileID: 4713522564162605905}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -168,9 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 4891924030783315959}
+    m_SelectOnDown: {fileID: 4891529564075691951}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -490,7 +490,7 @@ RectTransform:
   - {fileID: 4713962394907861853}
   - {fileID: 4713647111129856103}
   m_Father: {fileID: 4713522564162605905}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -518,9 +518,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 8867449068592900438}
+    m_SelectOnDown: {fileID: 5388423871418365792}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -547,7 +547,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: creationCompte
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &4838780966344814237
 Animator:
   serializedVersion: 3
@@ -753,8 +764,8 @@ RectTransform:
   - {fileID: 4713077237636714379}
   - {fileID: 4713420821223732051}
   - {fileID: 4713994741314526785}
-  - {fileID: 4713525980416209317}
   - {fileID: 3625407622570235967}
+  - {fileID: 4713525980416209317}
   - {fileID: 6512430356320825534}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -815,7 +826,7 @@ GameObject:
   - component: {fileID: 4837020379161151527}
   m_Layer: 5
   m_Name: CreationMotPasseInput
-  m_TagString: Untagged
+  m_TagString: CreationMotPasse
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -891,9 +902,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 4891354944822627737}
+    m_SelectOnDown: {fileID: 8867449068592900438}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -1352,7 +1363,7 @@ GameObject:
   - component: {fileID: 4838764420379185859}
   m_Layer: 5
   m_Name: UtilisateurInput
-  m_TagString: Untagged
+  m_TagString: CreationUtilisateur
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1428,9 +1439,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 5388423871418365792}
+    m_SelectOnDown: {fileID: 4891924030783315959}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -1738,9 +1749,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 4891529564075691951}
+    m_SelectOnDown: {fileID: 4891354944822627737}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -1769,8 +1780,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: SetTrigger
-        m_Mode: 5
+        m_MethodName: retourMenuLogin
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
