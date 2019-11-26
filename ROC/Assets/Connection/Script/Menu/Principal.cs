@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 #endregion
 
 public class Principal : Menu
@@ -41,7 +42,7 @@ public class Principal : Menu
       switch (information)
       {
          case "ConnexionReussi":
-            notificationConnexion.changementInfo("ConnexionReussi");
+            SceneManager.LoadScene("MenuHeros");
             break;
 
          case "mauvaisMotDePasse":
