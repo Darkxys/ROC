@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
-    public SaveHandler _handler;
+    public DataBase _handler;
 
     [SerializeField]
     private GameObject _coffre;
@@ -33,7 +33,7 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _handler = GameObject.FindGameObjectWithTag("Saver").GetComponent<SaveHandler>();
+        _handler = GameObject.FindGameObjectWithTag("ConnecteurSql").GetComponent<DataBase>();
         _level = _handler.levelDungeon;
         _textLvl.text += _level;
         List<TypeDonjon> lstType = GenerateTypes(_handler);
@@ -91,7 +91,7 @@ public class Game : MonoBehaviour
         stat.Init(hero.niveau, hero.exp, hero.gold, lstItem);
     }
 
-    private List<TypeDonjon> GenerateTypes(SaveHandler handler)
+    private List<TypeDonjon> GenerateTypes(DataBase handler)
     {
         List<TypeDonjon> lstType = new List<TypeDonjon>();
 
