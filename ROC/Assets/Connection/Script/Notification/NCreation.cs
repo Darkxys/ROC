@@ -54,7 +54,7 @@ public class NCreation : Notification
             Vignette.GetComponent<Image>().color = RougeClaire;
 
             // On change le texte de la description.
-            Description.text = "Nom d'utilisatuer doit avoir 1 à 15 caractère.";
+            Description.text = "Nom d'utilisateur doit avoir 1 à 15 caractère.";
 
             // On change la direction du bouton de "quitter".
             QuitterBtn.onClick.AddListener(retourCreationCompte);
