@@ -11981,6 +11981,36 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: MenuSauvegarde
       objectReference: {fileID: 0}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1433043569}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Supprimer
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638430363856980449, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5e41106bd909014db92910fbf8a2bf9, type: 3}
 --- !u!1 &5001545152235348921 stripped
