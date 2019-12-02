@@ -11,7 +11,6 @@ using UnityEngine.EventSystems;
 public class CreationCompte : Menu
 {
    #region Attribut
-   [SerializeField] GameObject utilisateurField;
    [SerializeField] List<InputField> champsDeCreation;
    [SerializeField] NCreation notificationCreation;
 
@@ -67,17 +66,6 @@ public class CreationCompte : Menu
                break;
          }
       }
-   }
-
-   public void retourMenuLogin()
-   {
-      // Note personnel, il saisis bien la zone de saisis mais il affiche pas la barre clinotante.
-      
-      // On met la zone de saisis d'utilisateur active.
-      GestionnaireEvenement.SetSelectedGameObject(utilisateurField);
-      
-      // On met la zone de saisis d'utilisateur active.
-      CanvasAnimation.SetTrigger("RetourLogin");
    }
 
    public override void typeMenu()

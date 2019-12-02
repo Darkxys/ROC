@@ -15,36 +15,25 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 #endregion
 
-public abstract class DataBase : MonoBehaviour
+public class DataBase : MonoBehaviour
 {
    #region Attribut
    private string Host { get; set; }
 
-    public Sauvegarde selectedSave;
-    public SaveDB _dbHandler;
-    public int levelDungeon = 1;
-
-    [SerializeField]
-    private GameObject _btnPrefab;
-    [SerializeField]
-    private GameObject _infoContainer;
-    [SerializeField]
-    private GameObject _btnContainer;
-    [SerializeField]
-    private GameObject _menu;
-    [SerializeField]
-    private InputField _nameField;
-
-    private List<Sauvegarde> _lstSave;
-    private GameObject _infoActive;
-
-    private string BD { get; set; }
+   private string BD { get; set; }
 
    private string Utilisateur { get; set; }
 
    private string MotDePasse { get; set; }
 
    protected MySqlConnection Connecteur { get; private set; }
+
+   protected MySqlDataReader Lecteur { get; set; }
+
+   protected MySqlCommand Commande { get; set; }
+
+   protected string Requete { get; set; }
+
    #endregion
 
    #region Constante
@@ -52,6 +41,34 @@ public abstract class DataBase : MonoBehaviour
    #endregion
 
    #region Méthode Unité
+   private void Awake()
+   {
+      // On trouve le contrôle sql.
+      GameObject[] liste = GameObject.FindGameObjectsWithTag("ControllerSql");
+
+      // Si le tableau est plus grand que 1, fait ceci.
+      if (liste.Length > 1)
+      {
+         BDHero bdH = liste[1].GetComponent<BDHero>();
+
+         _dbHandler = bdH._dbHandler;
+         _lstSave = bdH._lstSave;
+
+         Destroy(liste[1]);
+      }
+      else
+      {
+         // On initialise les attributs
+         _dbHandler = new SaveDB();
+         _lstSave = new List<Sauvegarde>();
+
+         // On initialise la liste.
+         initialisationListe();
+      }
+
+      // On met a jour la liste.
+      miseAJourListe();
+   }
    private void OnEnable()
    {
       // Si le fichier existe on le lis, sinon il faut le créee.
@@ -67,32 +84,10 @@ public abstract class DataBase : MonoBehaviour
       // On lis les informations du fichier de configuration.
       LireFichier();
    }
+   #endregion
 
-    void Awake()
-    {
-        GameObject[] lst = GameObject.FindGameObjectsWithTag("ControllerSql");
-
-        if (lst.Length > 1)
-        {
-            DataBase db = lst[1].GetComponent<DataBase>();
-            _dbHandler = db._dbHandler;
-            _lstSave = db._lstSave;
-
-            GameObject.Destroy(lst[1]);
-        }
-        else 
-        {
-            _dbHandler = new SaveDB();
-            _lstSave = new List<Sauvegarde>();
-            InitList();
-        }
-
-        UpdateDataList();
-    }
-    #endregion
-
-    #region Méthode protégé
-    protected void ConnectionBd()
+   #region Méthode protégé
+   protected void ConnectionBd()
    {
       // Déclaration de la variable locale.
       string constr = "server=" + Host + ";uid=" + Utilisateur + ";pwd=" + MotDePasse + ";database=" + BD + ";";
@@ -180,279 +175,351 @@ public abstract class DataBase : MonoBehaviour
       }
    }
 
-    #endregion
+   #endregion
+
+   #region Attribut Francis
+   public Sauvegarde selectedSave;
+   public SaveDB _dbHandler;
+   public int levelDungeon = 1;
 
+   [SerializeField] GameObject _btnPrefab;
+   [SerializeField] GameObject _infoContainer;
+   [SerializeField] GameObject _btnContainer;
+   [SerializeField] GameObject _menu;
+   [SerializeField] InputField _nameField;
 
-    private void InitList()
-    {
-        MySqlDataReader reader;
-        MySqlCommand command = _dbHandler.con.CreateCommand();
+   private List<Sauvegarde> _lstSave;
+   private GameObject _infoActive;
+   #endregion
 
-        command.CommandText = "SELECT * FROM sauvegardes WHERE idUtilisateur = '" + _dbHandler.userID.ToString() + "'";
-        reader = command.ExecuteReader();
+   #region Méthode Francis
+
+   #region Méthode publique
+   public void afficheInfoSauvegarde()
+   {
+      // Si l’information qui est active a une valeur, on démolit l’info.
+      if (_infoActive != null)
+         Destroy(_infoActive);
+
+      // On fait apparaitre une cellule d'info.
+      _infoActive = Instantiate(_infoContainer);
 
-        while (reader.Read())
-        {
-            Sauvegarde save = new Sauvegarde(reader);
-            _lstSave.Add(save);
-        }
-        reader.Close();
+      // On met l’information du héros dans le conteneur.
+      _infoActive.name = "InfoHero";
 
-        foreach (Sauvegarde s in _lstSave)
-        {
-            MySqlDataReader readerHero;
-            command = _dbHandler.con.CreateCommand();
+      // On initialise la position du conteneur.
+      _infoActive.transform.position = _menu.transform.position;
+      _infoActive.transform.parent = _menu.transform;
 
-            command.CommandText = "SELECT * FROM heros WHERE HerosID = '" + s.heroID + "'";
-            readerHero = command.ExecuteReader();
+      // On initialise le héros avec le héros de la sauvegarde qui est active.
+      Hero hero = selectedSave.hero;
 
-            Hero hero = null;
-            while (readerHero.Read())
-                hero = new Hero(readerHero);
+      // On crée un tableau de « string » avec les infos du héros.
+      string[] info = { hero.nom, hero.niveau.ToString(), hero.exp.ToString(), selectedSave.levelMax.ToString() };
 
-            s.hero = hero;
-            readerHero.Close();
-        }
+      // On boucle tout le tableau d’information et on insère l’info dans le conteneur.
+      for (int compte = 0; compte < info.Length; compte++)
+         _infoActive.transform.GetChild(compte).GetComponent<Text>().text += info[compte];
 
-    }
+      // On met le niveau max du donjon dans la variable « levelDungeon ».
+      levelDungeon = selectedSave.levelMax;
+   }
 
-    public void UpdateDataList()
-    {
-        foreach (Transform child in _btnContainer.transform)
-            GameObject.Destroy(child.gameObject);
+   public void Supprimer()
+   {
+      // On supprime la sauvegarde.
+      suppresionSauvegarde();
 
-        foreach (Sauvegarde save in _lstSave)
-        {
-            GameObject go = Instantiate(_btnPrefab);
-            if (save == _lstSave[0])
-                go.GetComponent<Button>().Select();
+      // On supprime le héros.
+      suppresionHero();
 
+      // On enlève la sauvegarde dans la liste.
+      _lstSave.Remove(selectedSave);
 
-            go.transform.parent = _btnContainer.transform;
-            go.transform.GetChild(0).GetComponent<Text>().text = "Nom : " + save.hero.nom + " | " + save.hero.niveau;
-            go.GetComponent<BtnSave>().save = save;
-        }
+      // On met à jour la liste.
+      miseAJourListe();
+   }
 
-        if (_lstSave.Count > 0)
-        {
-            selectedSave = _lstSave[0];
-            ShowInfoSave();
-        }
-    }
+   public void miseAJourListe()
+   {
+      // On boucle tous les enfants et leurs conteneurs.
+      foreach (Transform enfant in _btnContainer.transform)
+         Destroy(enfant.gameObject);
 
-    private void OnApplicationQuit()
-    {
+      // On boucle tous la liste de sauvegarde.
+      foreach (Sauvegarde lasauvegarde in _lstSave)
+      {
+         // On fait apparaitre le « prefab » du bouton.
+         GameObject partir = Instantiate(_btnPrefab);
+
+         // Si on est à la première sauvegarde, on la sélectionne.
+         if (selectedSave == _lstSave[0])
+            partir.GetComponent<Button>().Select();
+
+         // On crée la dimension du bouton.
+         partir.transform.parent = _btnContainer.transform;
+
+         // On met le nom du héros et son niveau comme description du bouton.
+         partir.transform.GetChild(0).GetComponent<Text>().text = "Nom : " + lasauvegarde.hero.nom + " | " + lasauvegarde.hero.niveau;
+
+         // On met la sauvegarde dans le bouton.
+         partir.GetComponent<BtnSave>().save = lasauvegarde;
+      }
+
+      // Si la liste est plus grande que zéro d’élément, tu fais ceci.
+      if (_lstSave.Count > 0)
+      {
+         // On sélectionne la première sauvegarde.
+         selectedSave = _lstSave[0];
+
+         // On affiche les informations de la sauvegarde.
+         afficheInfoSauvegarde();
+      }
+   }
 
-    }
 
-    public void Play()
-    {
-        DontDestroyOnLoad(this);
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
-    }
+   #endregion
 
-    public void Return()
-    {
-        SceneManager.LoadScene("MenuPrincipal", LoadSceneMode.Single);
-    }
+   #region Méthode privé
+   private void suppresionSauvegarde()
+   {
+      // On fait la requête pour la suppresion de la sauvegarde.
+      Requete = "DELETE FROM sauvegardes WHERE SauvegardeID = '" + selectedSave.id + "'";
 
-    public void Delete()
-    {
-        int heroID = selectedSave.hero.id;
+      // On crée une nouvelle commande et on insère la requête dedans.
+      Commande = _dbHandler.con.CreateCommand();
+      Commande.CommandText = Requete;
+
+      // On exécute la commande.
+      Commande.ExecuteNonQuery();
+   }
+
+   private void suppresionHero()
+   {
+      // On fait la requête pour la suppression du héros.
+      Requete = "DELETE FROM heros WHERE HerosID = '" + selectedSave.hero.id + "'";
 
-        DeleteSave();
-        DeleteHero();
+      // On crée une nouvelle commande et on insère la requête dedans.
+      Commande = _dbHandler.con.CreateCommand();
+      Commande.CommandText = Requete;
 
-        _lstSave.Remove(selectedSave);
+      // On exécute la commande de suppression du héros.
+      Commande.ExecuteNonQuery();
+
+      // On fait la requête pour supprimer les compétences du héros.
+      Requete = "DELETE FROM competencesheros WHERE idHero = '" + selectedSave.id + "'";
+
+      // On crée une nouvelle commande et on insère la requête dedans.
+      Commande = _dbHandler.con.CreateCommand();
+      Commande.CommandText = Requete;
+
+      // On exécute la commande pour supprimer les compétences du héros.
+      Commande.ExecuteNonQuery();
 
-        selectedSave = null;
+      // On fait la requête pour supprimer tous les objets du héros.
+      Requete = "DELETE FROM itemheros WHERE idHero = '" + selectedSave.id + "'";
 
-        UpdateDataList();
-    }
+      // On crée une nouvelle commande et on insère la requête dedans.
+      Commande = _dbHandler.con.CreateCommand();
+      Commande.CommandText = Requete;
 
-    private void DeleteSave()
-    {
-        // Delete the save
-        string requete = "DELETE FROM sauvegardes WHERE SauvegardeID = '" + selectedSave.id + "'";
+      // On exécute la commande de suppression des objets du héros.
+      Commande.ExecuteNonQuery();
+   }
 
-        MySqlCommand cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
+   private void initialisationListe()
+   {
+      // On initialise la liste des sauvegardes.
+      initialisationListeSauvegarde();
 
-        cmd.ExecuteNonQuery();
-    }
+      // On initialise les héros dans les sauvegardes.
+      initialisationHeroDansSauvegarde();
+   }
 
-    private void DeleteHero()
-    {
-        // Delete the hero
-        string requete = "DELETE FROM heros WHERE HerosID = '" + selectedSave.hero.id + "'";
+   private void initialisationListeSauvegarde()
+   {
+      // On initialise la commande.
+      Commande = _dbHandler.con.CreateCommand();
+
+      // On sélectionne toutes les sauvegardes de l’utilisateur et on exécute la commande.
+      Commande.CommandText = "SELECT * FROM sauvegardes WHERE idUtilisateur = '" + _dbHandler.userID.ToString() + "'";
+      Lecteur = Commande.ExecuteReader();
 
-        MySqlCommand cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
+      // On boucle toutes les sauvegardes et on les rajoute dans la liste des sauvegardes.
+      while (Lecteur.Read())
+      {
+         Sauvegarde sauvegarde = new Sauvegarde(Lecteur);
+         _lstSave.Add(sauvegarde);
+      }
 
-        cmd.ExecuteNonQuery();
+      // On ferme la commande.
+      Lecteur.Close();
+   }
 
-        // Delete all competencehero
-        requete = "DELETE FROM competencesheros WHERE idHero = '" + selectedSave.id + "'";
+   private void initialisationHeroDansSauvegarde()
+   {
+      foreach (Sauvegarde lasauvegarde in _lstSave)
+      {
+         // On initialise la commande.
+         Commande = _dbHandler.con.CreateCommand();
 
-        cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
-
-        cmd.ExecuteNonQuery();
-
-        // Delete all itemshero
-        requete = "DELETE FROM itemheros WHERE idHero = '" + selectedSave.id + "'";
-
-        cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
-
-        cmd.ExecuteNonQuery();
-    }
-
-    public void Create()
-    {
-        Hero newHero = CreateHero(_nameField.text);
-        Sauvegarde newSave = CreateSauvegarde(newHero);
-        newSave.hero = newHero;
-
-        _lstSave.Add(newSave);
-
-        UpdateDataList();
-    }
-
-    private Sauvegarde CreateSauvegarde(Hero hero)
-    {
-        string requete =
-           "INSERT INTO sauvegardes " +
-           "VALUES (default," + _dbHandler.userID + ",default," + hero.id + ")";
-
-        MySqlCommand cmd = _dbHandler.con.CreateCommand();
-        MySqlDataReader reader;
-        cmd.CommandText = requete;
-
-        cmd.ExecuteNonQuery();
-        long idSauvegarde = cmd.LastInsertedId;
-
-        requete = "SELECT * FROM sauvegardes WHERE SauvegardeID = '" + idSauvegarde + "'";
-
-        cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
-
-        reader = cmd.ExecuteReader();
-        Sauvegarde newSauvegarde = null;
-        while (reader.Read())
-            newSauvegarde = new Sauvegarde(reader);
-        reader.Close();
-
-        return newSauvegarde;
-    }
-
-    private Hero CreateHero(string name)
-    {
-        string requete =
-            "INSERT INTO heros " +
-            "VALUES (default,'" + name + "',default,default,default,default,default,default)";
-
-        MySqlCommand cmd = _dbHandler.con.CreateCommand();
-        MySqlDataReader reader;
-        cmd.CommandText = requete;
-
-        cmd.ExecuteNonQuery();
-        long idHero = cmd.LastInsertedId;
-
-        requete = "SELECT * FROM heros WHERE HerosID = '" + idHero + "'";
-
-        cmd = _dbHandler.con.CreateCommand();
-        cmd.CommandText = requete;
-
-        reader = cmd.ExecuteReader();
-        Hero newHero = null;
-        while (reader.Read())
-            newHero = new Hero(reader);
-        reader.Close();
-
-        return newHero;
-    }
-
-    public void ShowInfoSave()
-    {
-        if (_infoActive != null)
-            GameObject.Destroy(_infoActive);
-
-        _infoActive = Instantiate(_infoContainer);
-
-        _infoActive.name = "InfoHero";
-        _infoActive.transform.position = _menu.transform.position;
-        _infoActive.transform.parent = _menu.transform;
-
-        Hero h = selectedSave.hero;
-        string[] info = { h.nom, h.niveau.ToString(), h.exp.ToString(), selectedSave.levelMax.ToString() };
-
-        for (int i = 0; i < info.Length; i++)
-            _infoActive.transform.GetChild(i).GetComponent<Text>().text += info[i];
-
-        levelDungeon = selectedSave.levelMax;
-    }
-
-    public void SaveGame()
-    {
-        GameObject go = GameObject.FindGameObjectWithTag("player");
-        if (!go) return;
-
-        MySqlConnection con = _dbHandler.con;
-        MySqlDataReader reader;
-        Player player = go.GetComponent<Player>();
-        PlayerStats statsPlayer = player.Joueur;
-        Stat stat = player.JoueurStats;
-
-        int exp = statsPlayer.Xp;
-        int attaque = 10 * statsPlayer.Level;
-        int level = statsPlayer.Level;
-        int gold = statsPlayer.Gold;
-        int vie = (int)stat.MaxValVie;
-        List<int> lstItem = statsPlayer.ItemsPos;
-
-        // Update on Hero table
-        string request =
-            "UPDATE heros " +
-            "SET Niveau = " + level + ", Exp = " + exp + ", gold = " + gold + ", vie = " + vie + ", attaque = " + attaque + " " +
-            "WHERE HerosID = " + selectedSave.heroID;
-
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = request;
-
-        cmd.ExecuteNonQuery();
-
-        // Update on all itemshero table
-        request =
-            "SELECT * FROM itemheros WHERE idHero = " + selectedSave.heroID;
-
-        cmd = con.CreateCommand();
-        cmd.CommandText = request;
-
-        reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            foreach (int id in statsPlayer.ItemsPos)
+         // On sélectionne le héros du joueur et on exécute la commande.
+         Commande.CommandText = "SELECT * FROM heros WHERE HerosID = '" + lasauvegarde.heroID + "'";
+
+         // On exécute la commande.
+         Lecteur = Commande.ExecuteReader();
+
+         // On se crée un héros qui est vide.
+         Hero leHero = null;
+
+         // On lit toutes les informations du héros et on stocke les informations dans sa variable.
+         while (Lecteur.Read())
+            leHero = new Hero(Lecteur);
+
+         // On stocke le héros dans la sauvegarde.
+         lasauvegarde.hero = leHero;
+
+         // On ferme le lecteur.
+         Lecteur.Close();
+      }
+   }
+   #endregion   
+
+   public void Return()
+   {
+      SceneManager.LoadScene("MenuPrincipal", LoadSceneMode.Single);
+   }
+
+   public void Create()
+   {
+      Hero newHero = CreateHero(_nameField.text);
+      Sauvegarde newSave = CreateSauvegarde(newHero);
+      newSave.hero = newHero;
+
+      _lstSave.Add(newSave);
+
+      miseAJourListe();
+   }
+
+   private Sauvegarde CreateSauvegarde(Hero hero)
+   {
+      string requete =
+         "INSERT INTO sauvegardes " +
+         "VALUES (default," + _dbHandler.userID + ",default," + hero.id + ")";
+
+      MySqlCommand cmd = _dbHandler.con.CreateCommand();
+      MySqlDataReader reader;
+      cmd.CommandText = requete;
+
+      cmd.ExecuteNonQuery();
+      long idSauvegarde = cmd.LastInsertedId;
+
+      requete = "SELECT * FROM sauvegardes WHERE SauvegardeID = '" + idSauvegarde + "'";
+
+      cmd = _dbHandler.con.CreateCommand();
+      cmd.CommandText = requete;
+
+      reader = cmd.ExecuteReader();
+      Sauvegarde newSauvegarde = null;
+      while (reader.Read())
+         newSauvegarde = new Sauvegarde(reader);
+      reader.Close();
+
+      return newSauvegarde;
+   }
+
+   private Hero CreateHero(string name)
+   {
+      string requete =
+          "INSERT INTO heros " +
+          "VALUES (default,'" + name + "',default,default,default,default,default,default)";
+
+      MySqlCommand cmd = _dbHandler.con.CreateCommand();
+      MySqlDataReader reader;
+      cmd.CommandText = requete;
+
+      cmd.ExecuteNonQuery();
+      long idHero = cmd.LastInsertedId;
+
+      requete = "SELECT * FROM heros WHERE HerosID = '" + idHero + "'";
+
+      cmd = _dbHandler.con.CreateCommand();
+      cmd.CommandText = requete;
+
+      reader = cmd.ExecuteReader();
+      Hero newHero = null;
+      while (reader.Read())
+         newHero = new Hero(reader);
+      reader.Close();
+
+      return newHero;
+   }
+
+   public void SaveGame()
+   {
+      GameObject go = GameObject.FindGameObjectWithTag("player");
+      if (!go) return;
+
+      MySqlConnection con = _dbHandler.con;
+      MySqlDataReader reader;
+      Player player = go.GetComponent<Player>();
+      PlayerStats statsPlayer = player.Joueur;
+      Stat stat = player.JoueurStats;
+
+      int exp = statsPlayer.Xp;
+      int attaque = 10 * statsPlayer.Level;
+      int level = statsPlayer.Level;
+      int gold = statsPlayer.Gold;
+      int vie = (int)stat.MaxValVie;
+      List<int> lstItem = statsPlayer.ItemsPos;
+
+      // Update on Hero table
+      string request =
+          "UPDATE heros " +
+          "SET Niveau = " + level + ", Exp = " + exp + ", gold = " + gold + ", vie = " + vie + ", attaque = " + attaque + " " +
+          "WHERE HerosID = " + selectedSave.heroID;
+
+      MySqlCommand cmd = con.CreateCommand();
+      cmd.CommandText = request;
+
+      cmd.ExecuteNonQuery();
+
+      // Update on all itemshero table
+      request =
+          "SELECT * FROM itemheros WHERE idHero = " + selectedSave.heroID;
+
+      cmd = con.CreateCommand();
+      cmd.CommandText = request;
+
+      reader = cmd.ExecuteReader();
+      while (reader.Read())
+      {
+         foreach (int id in statsPlayer.ItemsPos)
+         {
+            if (id == Int32.Parse(reader["idHero"].ToString()))
             {
-                if (id == Int32.Parse(reader["idHero"].ToString()))
-                {
-                    lstItem.Remove(id);
-                    break;
-                }
+               lstItem.Remove(id);
+               break;
             }
-        }
-        reader.Close();
+         }
+      }
+      reader.Close();
 
-        foreach (int id in lstItem)
-        {
-            request =
-            "INSERT INTO itemheros" +
-            "VALUES (" + id + ", " + selectedSave.heroID + ")";
+      foreach (int id in lstItem)
+      {
+         request =
+         "INSERT INTO itemheros" +
+         "VALUES (" + id + ", " + selectedSave.heroID + ")";
 
-            cmd = con.CreateCommand();
-            cmd.CommandText = request;
+         cmd = con.CreateCommand();
+         cmd.CommandText = request;
 
-            cmd.ExecuteNonQuery();
-        }
-    }
+         cmd.ExecuteNonQuery();
+      }
+   }
+
+   #endregion
+
+
+
 }

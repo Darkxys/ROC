@@ -25,11 +25,25 @@ public class NCreation : Notification
       switch(option)
       {
          case "CreationCompteReussi":
+            // On enlève tous les fonctions des boutons "Jouer" et "revenir".
+            JouerBtn.onClick.RemoveAllListeners();
+            RevenirBtn.onClick.RemoveAllListeners();
+
             // On change la couleur de la vignette à du vert.
             Vignette.GetComponent<Image>().color = VertClaire;
 
             // On change le texte de la description.
             Description.text = "Création de compte réussi";
+
+            // On affiche les boutons de notification.
+            JouerBtn.gameObject.SetActive(true);
+            RevenirBtn.gameObject.SetActive(true);
+
+            // On met la direction du bouton pour jouer une partie.
+            JouerBtn.onClick.AddListener(jouerPartie);
+
+            // on change la direction du bouton pour revenir au menu de connection.
+            RevenirBtn.onClick.AddListener(retourCreationCompte);
 
             // On change la direction du bouton de "quitter".
             QuitterBtn.onClick.AddListener(retourCreationCompte);
@@ -98,6 +112,11 @@ public class NCreation : Notification
 
       // On actionne l'animation de retour au menu de création de compte.
       CanvasAnimation.SetTrigger("RetourCreationCompte");
+   }
+
+   private void jouerPartie()
+   {
+      CanvasAnimation.SetTrigger("MenuHero");
    }
    #endregion
 }

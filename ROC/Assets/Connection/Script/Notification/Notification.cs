@@ -25,6 +25,10 @@ public abstract class Notification : MonoBehaviour
 
    public Button QuitterBtn { get; private set; }
 
+   public Button JouerBtn;
+
+   public Button RevenirBtn;
+
    public GameObject Vignette { get; private set; }
    #endregion
 

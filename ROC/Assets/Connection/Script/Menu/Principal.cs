@@ -42,7 +42,7 @@ public class Principal : Menu
       switch (information)
       {
          case "ConnexionReussi":
-            SceneManager.LoadScene("MenuHeros");
+            CanvasAnimation.SetTrigger("MenuHero");
             break;
 
          case "mauvaisMotDePasse":
