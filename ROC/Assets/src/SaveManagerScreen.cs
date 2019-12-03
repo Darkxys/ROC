@@ -59,6 +59,8 @@ public class SaveManagerScreen : MonoBehaviour
     }
     private void SetInteractable(bool isInteractible)
     {
+        if (!menuSetting.activeSelf) return;
+
         foreach (Transform child in menuSetting.transform)
         {
             Button btn = child.gameObject.GetComponent<Button>();

@@ -13,6 +13,7 @@ public class Hero
     public int exp;
     public int mana;
     public int gold;
+    public int vie;
 
     public Hero(MySqlDataReader reader)
     {
@@ -22,6 +23,7 @@ public class Hero
         exp = Int32.Parse(reader["Exp"].ToString());
         mana = Int32.Parse(reader["Mana"].ToString());
         gold = Int32.Parse(reader["gold"].ToString());
+        vie = Int32.Parse(reader["vie"].ToString());
     }
 
     public Hero(string name)

@@ -21,9 +21,9 @@ public class Dungeon
     private TypeDonjon _dungeonType;
     private int _level;
 
-    public Dungeon(int _widthDungeon, int _heightDungeon, TypeDonjon type, int lvl, int qtt)
+    public Dungeon(int _widthDungeon, int _heightDungeon, TypeDonjon type, int lvl, int qtt, List<Tilemap> lst)
     {
-        InitLayers();
+        InitLayers(lst);
         _dungeonType = type;
         _level = lvl;
         _lstEnnemy = new Dictionary<Vector3, GameObject>();
@@ -130,7 +130,7 @@ public class Dungeon
         return _dungeonGenerator.GetChestPos();
     }
 
-    public void GenerateEnnemies(GameObject theEnnemy)
+    public void GenerateEnnemies(GameObject theEnnemy, GameObject interfaceTrans)
     {
         List<Vector3> lstEnnemy = _dungeonGenerator.GetPointsOfSpawn();
         Transform parent = GameObject.FindGameObjectWithTag("lstEnnemy").transform;
@@ -157,16 +157,8 @@ public class Dungeon
             }
         }
 
-        GameObject go1 = GameObject.Instantiate(ennemy);
-        go1.transform.position = _dungeonGenerator.GetPosBoss();
-        go1.transform.parent = parent;
-        go1.name = "BOSS";
-        go1.GetComponent<Ennemy>().vie *= 10;
-        go1.transform.localScale = new Vector3(5, 5, 1);
-        go1.GetComponent<SpriteRenderer>().sprite = sprite;
-        go1.SetActive(false);
-
-        _lstEnnemy.Add(go1.transform.position, go1);
+        GameObject bossGO = InstanciateBoss(ennemy, parent, sprite, interfaceTrans);
+        _lstEnnemy.Add(bossGO.transform.position, bossGO);
 
         GameObject.Destroy(ennemy);
     }
@@ -205,6 +197,25 @@ public class Dungeon
         _lstEnnemy = lst;
     }
 
+    private GameObject InstanciateBoss(GameObject ennemy, Transform parent, Sprite sprite, GameObject interfaceTrans)
+    {
+        GameObject go1 = GameObject.Instantiate(ennemy);
+
+        go1.transform.position = _dungeonGenerator.GetPosBoss();
+        go1.transform.parent = parent;
+        go1.name = "BOSS";
+        go1.GetComponent<Ennemy>().vie *= 10;
+        go1.transform.localScale = new Vector3(5, 5, 1);
+        go1.GetComponent<SpriteRenderer>().sprite = sprite;
+
+        Boss boss = go1.AddComponent<Boss>();
+        boss.Interface = interfaceTrans;
+
+        go1.SetActive(false);
+
+        return go1;
+    }
+
     private GameObject InstanciateEnnemy(GameObject go)
     {
         GameObject ennemy = GameObject.Instantiate(go);
@@ -216,10 +227,27 @@ public class Dungeon
         return ennemy;
     }
 
-    private void InitLayers()
+    private void InitLayers(List<Tilemap> lst)
     {
-        _ground = GameObject.FindGameObjectWithTag("layerGround").GetComponent<Tilemap>();
-        _collision = GameObject.FindGameObjectWithTag("layerCollision").GetComponent<Tilemap>();
-        _air = GameObject.FindGameObjectWithTag("layerAir").GetComponent<Tilemap>();
+        _ground = lst[0];
+        _collision = lst[1];
+        _air = lst[2];
+    }
+
+    public void StopEnnemies()
+    {
+        foreach(KeyValuePair<Vector3,GameObject> enn in _lstEnnemyInstantiate)
+            enn.Value.SetActive(false);
+    }
+
+    public void ContinueEnnemies()
+    {
+        foreach (KeyValuePair<Vector3, GameObject> enn in _lstEnnemyInstantiate)
+            enn.Value.SetActive(true);
+    }
+
+    public bool CanTP(int x, int y)
+    {
+        return _dungeonGenerator.CanTP(x,y);
     }
 }

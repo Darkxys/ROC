@@ -28,7 +28,5 @@ public class ColorController : MonoBehaviour {
 
         }
 
-        Debug.Log("Color " + colorValue + " is set");
-
     }
 }

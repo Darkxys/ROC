@@ -100,12 +100,20 @@ public class Ennemy : MonoBehaviour
 
         if (vie <= 0)
         {
+            int multiplier = 1;
             Game gm = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>();
-            playerStats.Xp += Random.Range(level + 5, level + 8);
-            playerStats.Gold += Random.Range(level + 10, level + 15);
+
+            if (this.GetComponent<Boss>()) 
+                multiplier = 5;
+
+            playerStats.Xp += Random.Range(level + 5, level + 8) * multiplier;
+            playerStats.Gold += Random.Range(level + 10, level + 15) * multiplier;
             gm.EnnemyDead(gameObject);
 
-            Destroy(gameObject);
+
+            if (this.GetComponent<Boss>() is null)
+                Destroy(gameObject);
+
             Instantiate(mortEffet, transform.position, Quaternion.identity);
         }
     }

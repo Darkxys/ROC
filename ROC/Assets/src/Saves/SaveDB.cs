@@ -12,9 +12,9 @@ public class SaveDB
         GameObject go = GameObject.FindWithTag("Connector");
         if (go != null)
         {
-            //con = go.GetComponent<DataBase>().connection;
+            con = go.GetComponent<DataBase>().connection;
             con.Open();
-            //userID = go.GetComponent<DataBase>().userID;
+            userID = go.GetComponent<DataBase>().userID;
 
             GameObject.Destroy(go);
         }

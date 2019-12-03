@@ -13,10 +13,8 @@ public class ButtonListButton : MonoBehaviour
     [SerializeField]
     private GameObject coffre;
 
-
-
     private string myTextString;
-    private string idButton;
+    private int idButton;
 
     public void SetText(string textString, int id)
     {
@@ -24,7 +22,7 @@ public class ButtonListButton : MonoBehaviour
         myText.name = id.ToString();
 
         myTextString = textString;
-        idButton = id.ToString();
+        idButton = id;
     }
 
     public void OnClick()
@@ -40,7 +38,7 @@ public class ButtonListButton : MonoBehaviour
         int rand = r.Next(1, 8);
         coffre.SetActive(false);
 
-        buttonControl.ButtonClicked("Énigme du coffre", rand.ToString());
+        buttonControl.ButtonClicked("Énigme du coffre", rand);
 
     }
 }

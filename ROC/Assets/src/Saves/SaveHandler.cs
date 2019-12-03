@@ -12,19 +12,15 @@ public class SaveHandler : MonoBehaviour
     public SaveDB _dbHandler;
     public int levelDungeon = 1;
 
-    [SerializeField]
-    private GameObject _btnPrefab;
-    [SerializeField]
-    private GameObject _infoContainer;
-    [SerializeField]
-    private GameObject _btnContainer;
-    [SerializeField]
-    private GameObject _menu;
-    [SerializeField]
-    private InputField _nameField;
+    [SerializeField] private GameObject _btnPrefab;
+    [SerializeField] private GameObject _infoContainer;
+    [SerializeField] private GameObject _btnContainer;
+    [SerializeField] private GameObject _menu;
+    [SerializeField] private InputField _nameField;
 
     private List<Sauvegarde> _lstSave;
     private GameObject _infoActive;
+
     void Awake()
     {
         _dbHandler = new SaveDB();
@@ -33,8 +29,6 @@ public class SaveHandler : MonoBehaviour
 
         UpdateDataList();
     }
-
-   
 
     private void InitList()
     {
@@ -261,7 +255,7 @@ public class SaveHandler : MonoBehaviour
         int attaque = 10 * statsPlayer.Level;
         int level = statsPlayer.Level;
         int gold = statsPlayer.Gold;
-        int vie = (int)stat.MaxValVie;
+        int vie = (int)stat.CurrentValVie;
         List<int> lstItem = statsPlayer.ItemsPos;
 
         // Update on Hero table

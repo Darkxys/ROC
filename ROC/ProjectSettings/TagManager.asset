@@ -29,17 +29,10 @@ TagManager:
   - txtFelicitation
   - echec
   - bonusEnigme
-  - CreationConfirmation
-  - CreationMotPasse
-  - CreationUtilisateur
-  - NQuitterBtn
-  - NVignette
-  - NDescription
-  - FermerConnexion
-  - UtilisateurConnection
-  - MotDePasseConnexion
-  - LeCanvas
-  - EventSystem
+  - TransitionMenu
+  - btnClone
+  - PanelDetail
+  - ListeContent
   layers:
   - Default
   - TransparentFX

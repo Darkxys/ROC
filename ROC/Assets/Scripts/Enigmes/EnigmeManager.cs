@@ -5,10 +5,17 @@ using MySql.Data.MySqlClient;
 
 public class EnigmeManager : MonoBehaviour
 {
-    public Game leJeu;
+   public Game leJeu;
 
     private List<Enigme> lstEnigme;
     private SaveDB sauv;
+
+    public List<Enigme> LstEnigme {
+        get
+        {
+            return lstEnigme;
+        }
+    }
 
     // Use this for initialization
     void Start()
@@ -19,15 +26,10 @@ public class EnigmeManager : MonoBehaviour
         InitListe();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void InitListe()
     {
-        List<Enigme> lstEni = new List<Enigme>();
+        int i = 0;
+        lstEnigme = new List<Enigme>();
 
         MySqlConnection con = sauv.con;
         MySqlDataReader reader;
@@ -38,10 +40,30 @@ public class EnigmeManager : MonoBehaviour
 
         while (reader.Read())
         {
-            Enigme eni = new Enigme(reader);
-            lstEni.Add(eni);
+
+            Enigme eni = new Enigme(reader, i);
+            lstEnigme.Add(eni);
+            i++;
         }
 
         reader.Close();
     }
+
+    public void AjouterEnigme(string nom, int niveau, string question, string reponse, string choix1, string choix2)
+    {
+        int i = lstEnigme.Count;
+
+        MySqlConnection con = sauv.con;
+        MySqlDataReader reader;
+        MySqlCommand command = con.CreateCommand();
+
+        command.CommandText = "INSERT INTO enigmes " +
+                              "VALUES (default, " + niveau.ToString() + ", " + nom + ", " + question + ", " + reponse + ", " + choix1 + ", " + choix2 + ", " + reponse + ", default)";
+        reader = command.ExecuteReader();
+
+        reader.Close();
+
+        InitListe();
+    }
+
 }

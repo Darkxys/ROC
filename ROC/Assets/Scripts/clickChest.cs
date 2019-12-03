@@ -20,7 +20,6 @@ public class clickChest : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("wow");
         ui.SetActive(true);
     }
 }

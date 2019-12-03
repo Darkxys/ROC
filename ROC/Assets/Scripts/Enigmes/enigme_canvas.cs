@@ -73,6 +73,7 @@ public class enigme_canvas : MonoBehaviour
         CanvasGroup messageEchec = GameObject.FindGameObjectWithTag("echec").GetComponent<CanvasGroup>();
         Text txtBonus = GameObject.FindGameObjectWithTag("bonusEnigme").GetComponent<Text>();
 
+        // if (Validation(noEnigme, choix))
         if (Validation(noEnigme, choix))
         {
             if (compteur == 0)
@@ -89,7 +90,7 @@ public class enigme_canvas : MonoBehaviour
             }
 
             CanMauvais.alpha = 0;
-            txtBonus.text = "Récompense : 10 exp.";
+            txtBonus.text = "";
             CanvaAOuvrir.alpha = 1;
             CanvaAOuvrir.blocksRaycasts = true;
 
@@ -123,36 +124,6 @@ public class enigme_canvas : MonoBehaviour
 
         if (choixItem3.options[choixItem3.value].text == "Réponses possibles") { CanMauvais.alpha = 0; return; }
 
-        switch (duTexte.name)
-        {
-            case "1":
-                validerChoix("1", choixItem3.options[choixItem3.value].text);
-                break;
-            case "2":
-                validerChoix("2", choixItem3.options[choixItem3.value].text);
-                break;
-            case "3":
-                validerChoix("3", choixItem3.options[choixItem3.value].text);
-                break;
-            case "4":
-                validerChoix("4", choixItem3.options[choixItem3.value].text);
-                break;
-            case "5":
-                validerChoix("5", choixItem3.options[choixItem3.value].text);
-                break;
-            case "6":
-                validerChoix("6", choixItem3.options[choixItem3.value].text);
-                break;
-            case "7":
-                validerChoix("7", choixItem3.options[choixItem3.value].text);
-                break;
-            case "8":
-                validerChoix("8", choixItem3.options[choixItem3.value].text);
-                break;
-            default:
-                break;
-        }
-
-
+        validerChoix(duTexte.name, choixItem3.options[choixItem3.value].text);
     }
 }

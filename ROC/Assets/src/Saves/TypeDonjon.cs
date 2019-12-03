@@ -75,12 +75,9 @@ public class TypeDonjon
 
         command.CommandText = requete;
         reader = command.ExecuteReader();
-        Debug.Log("oof");
         while (reader.Read())
         {
-            Debug.Log("oof1");
             nomEnemy = reader["Nom"].ToString();
-            Debug.Log(nomEnemy);
         }
         reader.Close();
 

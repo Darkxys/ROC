@@ -19,7 +19,6 @@ public class Enigme
 
     public Enigme(int idE, int niveauE, string nomE, string questionE, string reponseE, string choix1E, string choix2E, string choix3E)
     {
-        Debug.Log("TEST");
         id = idE;
         niveau = niveauE;
         nom = nomE;
@@ -30,7 +29,7 @@ public class Enigme
         choix3 = choix3E;
     }
 
-    public Enigme(MySqlDataReader reader) : this(Int32.Parse(reader["enigmeID"].ToString()),
+    public Enigme(MySqlDataReader reader, int id) : this(id,
                                                 Int32.Parse(reader["niveau"].ToString()),
                                                 reader["nom"].ToString(),
                                                 reader["question"].ToString(),

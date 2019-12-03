@@ -575,13 +575,6 @@ public class Generator
         }
     }
 
-    private bool IsNear(Vector2Int pos1, Vector2Int pos2)
-    {
-        if (pos1.x + _widthPath == pos2.x || pos1.x - _widthPath == pos2.x) return true;
-        if (pos1.y + _widthPath == pos2.y || pos1.y - _widthPath == pos2.y) return true;
-        return false;
-    }
-
     private bool CheckAccessible(int x, int y, Vector2Int dir, ref List<Vector2Int> bounds)
     {
         if (x < 0 || y < 0 || x >= _maze.GetLength(0) || y >= _maze.GetLength(1)) return false;
@@ -660,6 +653,13 @@ public class Generator
             _directions[i] = _directions[randomNumber];
             _directions[randomNumber] = tmp;
         }
+    }
+
+    public bool CanTP(int x, int y)
+    {
+        Debug.Log(_maze[x, y] + " : " + _maze[x, _sizeY - y] + " : " + _maze[_sizeX - x, _sizeY - y] + " : " + _maze[_sizeX - x, y]);
+        if (_maze[x,y] != TileType.Wall) return true;
+        return false;
     }
 
     public int CountRooms() { return _listRooms.Count; }

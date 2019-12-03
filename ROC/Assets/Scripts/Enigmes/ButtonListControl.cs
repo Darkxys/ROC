@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
+//using UnityEngine.UIElements;
 
 public class ButtonListControl : MonoBehaviour
 {
@@ -10,35 +11,62 @@ public class ButtonListControl : MonoBehaviour
     private GameObject buttonTemplate;
 
     [SerializeField]
-    private GameObject puzzle1;
+    private EnigmeManager _enigmeManager;
+
+    public Enigme enigmeSelectionee;
+
+    private List<Enigme> _liste;
+
+    private PlayerStats player;
+
+    public int compteur = 0;
+
+    public const int EXP_GAGNE = 30;
+
+    public List<GameObject> _boutonClone;
 
 
-    private void Start()
+    public void Start()
     {
-        
+        updateListeEnigme();
+    }
 
+    public void updateListeEnigme()
+    {
+        _liste = _enigmeManager.LstEnigme;
 
-
-
-
-        // Initialisation statique (si la BD ne fonctionne pas)
-
-        for (int i = 1; i <= 8; i++)
+        foreach (GameObject clone in _boutonClone)
         {
-            GameObject button = Instantiate(buttonTemplate) as GameObject; 
-            button.SetActive(true);
-
-            button.GetComponent<ButtonListButton>().SetText("Énigme " + i, i);
-
-            button.transform.SetParent(buttonTemplate.transform.parent, false);
+            Destroy(clone);
         }
 
+        foreach (Enigme itemEnigme in _liste)
+        {
+          
+            GameObject button = Instantiate(buttonTemplate) as GameObject;
+            button.SetActive(true);
+            button.GetComponent<ButtonListButton>().SetText(("  " + (itemEnigme.id + 1).ToString() + "." + itemEnigme.nom.ToString()), itemEnigme.id);
+            button.tag = "btnClone";
+
+            button.transform.SetParent(buttonTemplate.transform.parent, false);
+
+            _boutonClone.Add(button);
+
+        }
 
     }
 
-    public void ButtonClicked(string myTextString, string id)
+    public void mettreEnigme()
+    {
+       
+
+    }
+
+    public void ButtonClicked(string myTextString, int id)
     {
         // REF des énigmes textuelles: https://www.cabaneaidees.com/15-enigmes-faciles-pour-les-enfants/
+
+        // Mettre dans le START
         CanvasGroup CanvaAOuvrir = GameObject.FindGameObjectWithTag("cnv1").GetComponent<CanvasGroup>();
         Text duTexte = GameObject.FindGameObjectWithTag("txtQuestion").GetComponent<Text>();
         Dropdown choixItem3 = GameObject.FindGameObjectWithTag("listeReponses").GetComponent<Dropdown>();
@@ -48,112 +76,90 @@ public class ButtonListControl : MonoBehaviour
         choixItem3.options.Add(new Dropdown.OptionData() { text = "Réponses possibles" });
         choixItem3.value = choixItem3.options.Count - 1;
         choixItem3.options.RemoveAt(choixItem3.options.Count - 1);
-        
+
         txtBonus.text = "Récompense : 30 exp.";
+        
+        enigmeSelectionee = _liste[id];
 
-        duTexte.name = id;
+        duTexte.name = enigmeSelectionee.id.ToString();
 
-        // Switch de la mort qui tue
-        switch (id)
+        CanvaAOuvrir.alpha = 1;
+        CanvaAOuvrir.blocksRaycasts = true;
+
+        duTexte.text = enigmeSelectionee.question;
+
+        choixItem3.options[0].text = enigmeSelectionee.choix1;
+        choixItem3.options[1].text = enigmeSelectionee.choix2;
+        choixItem3.options[2].text = enigmeSelectionee.choix3;
+
+        /*
+            CanvasGroup puzzle1 = GameObject.FindGameObjectWithTag("puzzle1").GetComponent<CanvasGroup>();
+            puzzle1.alpha = 1;
+            puzzle1.blocksRaycasts = true;
+        */
+
+    }
+
+    public void verifierChoixReponse()
+    {
+        Text duTexte = GameObject.FindGameObjectWithTag("txtQuestion").GetComponent<Text>();
+        Dropdown choixItem3 = GameObject.FindGameObjectWithTag("listeReponses").GetComponent<Dropdown>();
+        CanvasGroup CanMauvais = GameObject.FindGameObjectWithTag("txtMauvais").GetComponent<CanvasGroup>();
+
+        player = GameObject.FindGameObjectWithTag("player").GetComponent<PlayerStats>();
+
+        if (choixItem3.options[choixItem3.value].text == "Réponses possibles") { CanMauvais.alpha = 0; return; }
+
+        validerChoix(duTexte.name, choixItem3.options[choixItem3.value].text);
+    }
+
+    public void validerChoix(string noEnigme, string choix)
+    {
+        Text textFelicitation = GameObject.FindGameObjectWithTag("txtFelicitation").GetComponent<Text>();
+        CanvasGroup CanvaAOuvrir = GameObject.FindGameObjectWithTag("felicitation").GetComponent<CanvasGroup>();
+        CanvasGroup CanMauvais = GameObject.FindGameObjectWithTag("txtMauvais").GetComponent<CanvasGroup>();
+        CanvasGroup messageEchec = GameObject.FindGameObjectWithTag("echec").GetComponent<CanvasGroup>();
+        Text txtBonus = GameObject.FindGameObjectWithTag("bonusEnigme").GetComponent<Text>();
+
+        // if (Validation(noEnigme, choix))
+        if (_liste[Int32.Parse(noEnigme)].reponse == choix)
         {
-            case "1":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "On peut me trouver au fond d’un bateau de pêche ou au milieu d’un court de tennis.";
+            if (compteur == 0)
+            {
+                textFelicitation.text = "Bravo vous avez résolue l'énigme !\n\n Récompense obtenue : " + (EXP_GAGNE).ToString() + " exp";
+                player.Xp += EXP_GAGNE;
+                compteur = 0;
+            }
+            else if (compteur == 1)
+            {
+                textFelicitation.text = "Bravo vous avez résolue l'énigme !\n\n Récompense obtenue : " + (EXP_GAGNE - 20).ToString() + " exp";
+                player.Xp += (EXP_GAGNE - 20);
+                compteur = 0;
+            }
 
-                choixItem3.options[0].text = "Un filet";
-                choixItem3.options[1].text = "Une serviette";
-                choixItem3.options[2].text = "Un hameçon";
+            CanMauvais.alpha = 0;
+            txtBonus.text = "";
+            CanvaAOuvrir.alpha = 1;
+            CanvaAOuvrir.blocksRaycasts = true;
 
-                break;
-            case "2":
-
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Je ne peux pas marcher, j’ai pourtant un dos et quatre pieds. Qui suis-je ?";
-
-                choixItem3.options[0].text = "Une table";
-                choixItem3.options[1].text = "Une chaise";
-                choixItem3.options[2].text = "Une tortue";
-
-                break;
-            case "3":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Combien de gouttes d’eau peut-on mettre dans un verre vide?";
-
-                choixItem3.options[0].text = "1";
-                choixItem3.options[1].text = "250";
-                choixItem3.options[2].text = "1000";
-                break;
-            case "4":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Trois poissons sont dans un seau, l’un d’entre meurt, combien en reste t-il?";
-
-                choixItem3.options[0].text = "1";
-                choixItem3.options[1].text = "2";
-                choixItem3.options[2].text = "3";
-                break;
-            case "5":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Je ne fais pas de bruit quand je me réveille mais je réveille tout le monde.";
-
-                choixItem3.options[0].text = "Le coq";
-                choixItem3.options[1].text = "Le soleil";
-                choixItem3.options[2].text = "Le froid";
-                break;
-            case "6":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Quand je suis frais je suis chaud.Qui suis-je ?";
-
-                choixItem3.options[0].text = "De l'azote";
-                choixItem3.options[1].text = "Du pain";
-                choixItem3.options[2].text = "Le soleil";
-                // Solution  :Le pain.
-
-                break;
-            case "7":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Qu’est ce qui est plus grand que la Tour Eiffel, mais infiniment moins lourd.";
-
-                choixItem3.options[0].text = "Un ballon dirigeable";
-                choixItem3.options[1].text = "La tour Eiffel sur la lune";
-                choixItem3.options[2].text = "Son ombre";
-                // Solution  :Son ombre
-
-                break;
-            case "8":
-                CanvaAOuvrir.alpha = 1;
-                CanvaAOuvrir.blocksRaycasts = true;
-                duTexte.text = "Et enfin, je porte des lunettes mais je n’y vois rien. Qui suis-je ?";
-
-                choixItem3.options[0].text = "Une taupe";
-                choixItem3.options[1].text = "Un aveugle";
-                choixItem3.options[2].text = "Un nez";
-                // Solution  :le nez.
-
-                break;
-            case "9":
-                CanvasGroup puzzle1 = GameObject.FindGameObjectWithTag("puzzle1").GetComponent<CanvasGroup>();
-                puzzle1.alpha = 1;
-                puzzle1.blocksRaycasts = true;
-
-
-
-                break;
-
-            default:
-                break;
         }
+        else
+        {
+            if (compteur >= 1)
+            {
+                CanMauvais.alpha = 0;
+                messageEchec.alpha = 1;
+                messageEchec.blocksRaycasts = true;
+                compteur = 0;
 
-    
-
-
-
+            }
+            else
+            {
+                txtBonus.text = "Récompense : 10 exp.";
+                CanMauvais.alpha = 1;
+                compteur += 1;
+            }
+        }
     }
 
 }
