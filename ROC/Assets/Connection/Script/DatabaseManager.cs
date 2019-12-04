@@ -56,13 +56,6 @@ public class DatabaseManager : MonoBehaviour
       }
    }
 
-
-
-   // Update is called once per frame
-   void Update()
-   {
-   }
-
    #region Méthode publique
    public void Connection()
    {

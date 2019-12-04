@@ -38,7 +38,7 @@ public class DataBase : MonoBehaviour
    [SerializeField] InputField passwordCreationField;
    [SerializeField] InputField confirmationMotDePasseField;
 
-   [SerializeField] Notification fenetrenotification;
+   [SerializeField] NConnexion fenetrenotification;
    [SerializeField] MenuPrincipal fenetreMenuPrincipal;
 
    public int userID;
@@ -145,72 +145,60 @@ public class DataBase : MonoBehaviour
    #endregion
 
    #region Méthode publique
-   public void CreationCompte()
+   public string CreationCompte()
    {
-      if (passwordCreationField.text != confirmationMotDePasseField.text)
-         fenetrenotification.chargementinfoNotification("MotPasseDifferentCreation");
-      else
+      // On ouvre la connection.
+      ConnectionBd();
+
+      // On crée la commande de vérification.
+      MySqlCommand verification = new MySqlCommand("SELECT Nom FROM utilisateurs WHERE Nom='" + nomCreationField.text + "'", connection);
+
+      // On ouvre la lecture des données de la table de la base de données.
+      MySqlDataReader Malecture;
+      Malecture = verification.ExecuteReader();
+
+      // Tant qui a des champs dans la lecture, fait ceci.
+      while (Malecture.Read())
       {
-         // Déclaration de la variable locale.
-         bool existe = false;
-
-         // On ouvre la connection.
-         ConnectionBd();
-
-         // On crée la commande de vérification.
-         MySqlCommand verification = new MySqlCommand("SELECT Nom FROM utilisateurs WHERE Nom='" + nomCreationField.text + "'", connection);
-
-         // On ouvre la lecture des données de la table de la base de données.
-         MySqlDataReader Malecture;
-         Malecture = verification.ExecuteReader();
-
-         // Tant qui a des champs dans la lecture, fait ceci.
-         while (Malecture.Read())
+         if (Malecture["Nom"].ToString() != "")
          {
-            if (Malecture["Nom"].ToString() != "")
-            {
-               // On génère la fenêtre de notification.
-               fenetrenotification.chargementinfoNotification("UtilisateurExiste");
-
-               // On dit que l'utilisateur existe.
-               existe = true;
-            }
-         }
-
-         // On ferme la requête.
-         Malecture.Close();
-
-         // Si l'utilisateur n'existe pas, fait ceci.
-         if (!existe)
-         {
-            // On fait la requête.
-            string requete = "INSERT INTO utilisateurs VALUES (default,'" + nomCreationField.text + "','" + passwordCreationField.text + "')";
-            MySqlCommand commandeInsertion = new MySqlCommand(requete, connection);
-
-            // Si la requête fonctionne pas, on envoie une erreur dans la console
-            try
-            {
-               // On envoie la requête a la base données.
-               commandeInsertion.ExecuteReader();
-            }
-            catch
-            {
-               Debug.LogError("Insertion n'a pas fonctionner dans la base de données");
-            }
-
-            // On ferme la commande.
-            commandeInsertion.Dispose();
+            // On ferme la requête.
+            Malecture.Close();
 
             // On ferme la connection.
             connection.Close();
 
-            // On envoie la notification de création de compte.
-            fenetrenotification.chargementinfoNotification("CreationCompteReussi");
+            // On dit que l'utilisateur existe.
+            return "Utilisateur existe";
          }
-
-         // On ferme la connection.
-         connection.Close();
       }
+
+      // On ferme la requête.
+      Malecture.Close();
+
+      // On fait la requête pour crée l'utilisateur.
+      string requete = "INSERT INTO utilisateurs VALUES (default,'" + nomCreationField.text + "','" + passwordCreationField.text + "')";
+      MySqlCommand commandeInsertion = new MySqlCommand(requete, connection);
+
+      // Si la requête fonctionne pas, on envoie une erreur dans la console
+      try
+      {
+         // On envoie la requête a la base données.
+         commandeInsertion.ExecuteReader();
+      }
+      catch
+      {
+         Debug.LogError("Insertion n'a pas fonctionner dans la base de données");
+      }
+
+      // On ferme la commande.
+      commandeInsertion.Dispose();
+
+      // On ferme la connection.
+      connection.Close();
+
+      // On envoie le code de réussite.
+      return "Réussi";
    }
 
 

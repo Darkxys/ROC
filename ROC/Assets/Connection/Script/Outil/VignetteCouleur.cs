@@ -18,7 +18,7 @@ public class VignetteCouleur : MonoBehaviour
    #endregion
 
    #region Méthode Unité
-   private void Awake()
+   private void OnEnable()
    {
       // on initialise la couleur vert claire
       VertClaire = new Color(62 / 255f, 229 / 255f, 85 / 255f);

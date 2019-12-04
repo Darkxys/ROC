@@ -17,12 +17,6 @@ using UnityEngine.EventSystems;
 public class CreationCompte : MonoBehaviour
 {
    #region Attribut
-
-   #region Bouton
-   [SerializeField] Button btn_Connection;
-   [SerializeField] Button btn_Annuler;
-   #endregion
-
    #region Zone texte
    [SerializeField] InputField Utilisateur;
    [SerializeField] InputField MotDePasse;
@@ -36,24 +30,26 @@ public class CreationCompte : MonoBehaviour
 
    #region Système
    EventSystem systeme;
-   DataBase manager_bd;
+   [SerializeField] DataBase manager_bd;
    #endregion
 
-   Notification notification;
+   NCreation notification;
 
    #endregion
 
-   private void Start()
+   private void Awake()
    {
       // On initialise la variable system.
       systeme = EventSystem.current;
-      manager_bd = GetComponent<DataBase>();
+      notification = GameObject.FindGameObjectWithTag("NoCreation").GetComponent<NCreation>();
    }
 
    #region Méthode publique
-
    public void Creation()
    {
+      // Déclaration de la variable locale.
+      string reponse;
+      
       // Si les champs sont vide, tu fait ceci.
       if (Utilisateur.text == "" && MotDePasse.text == "" && Confirmation_MotDePasse.text == "")
          notification.chargementinfoNotification("pasInformation");
@@ -66,14 +62,20 @@ public class CreationCompte : MonoBehaviour
       if (MotDePasse.text != Confirmation_MotDePasse.text)
          notification.chargementinfoNotification("MotPasseDifferentCreation");
 
-      // Si tous est bon, on crée l'utilisateur.
-      manager_bd.CreationCompte();
-   }
+      // On crée l'utilisateur et on reçois la réponse de la base de donnée.
+      reponse = manager_bd.CreationCompte();
 
-   public void Annuler()
-   {
-      SceneManager.LoadScene("Connection", LoadSceneMode.Single);
-   }
+      // On analyse la réponse de la base de donnée.
+      switch(reponse)
+      {
+         case "Réussi":
+            notification.chargementinfoNotification("CreationCompteReussi");
+            break;
 
+         case "Utilisateur existe":
+            notification.chargementinfoNotification("UtilisateurExiste");
+            break;
+      }
+   }
    #endregion
 }
