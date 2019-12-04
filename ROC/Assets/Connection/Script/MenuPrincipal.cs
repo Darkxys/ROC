@@ -18,12 +18,6 @@ public class MenuPrincipal : MonoBehaviour
 
     #region Méthode publique
 
-    public void entrerDansMenuPrincipal()
-    {
-        // On actionne l’animation pour faire apparaitre la fenêtre du menu principal.
-        canvasAnimation.SetTrigger("MenuJeu");
-    }
-
     /// <summary>
     /// Permettre à l’utilisateur de fermer l’application par l’option.
     /// </summary>

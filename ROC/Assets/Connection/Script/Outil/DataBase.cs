@@ -12,13 +12,11 @@ using MySql.Data.MySqlClient;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 #endregion
 
 public class DataBase : MonoBehaviour
 {
-   // Pour l'avenir après la session :
-   // https://docs.microsoft.com/fr-fr/sql/relational-databases/server-management-objects-smo/create-program/connecting-to-an-instance-of-sql-server?view=sql-server-ver15
-
    #region Attribut
 
    #region Chemin du fichier connection
@@ -43,7 +41,7 @@ public class DataBase : MonoBehaviour
    [SerializeField] Notification fenetrenotification;
    [SerializeField] MenuPrincipal fenetreMenuPrincipal;
 
-    public int userID;
+   public int userID;
    #endregion                
 
    #region Méthode Unité
@@ -245,7 +243,8 @@ public class DataBase : MonoBehaviour
             if (tempMotDePasse == passwordField.text)
             {
                userID = (int)MonLecteur["UtilisateurID"];
-               fenetreMenuPrincipal.entrerDansMenuPrincipal();
+               DontDestroyOnLoad(this);
+               SceneManager.LoadScene("MenuHeros", LoadSceneMode.Single);
 
             }
             else
