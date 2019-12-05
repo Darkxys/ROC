@@ -39,7 +39,6 @@ public class DataBase : MonoBehaviour
    [SerializeField] InputField confirmationMotDePasseField;
 
    [SerializeField] NConnexion fenetrenotification;
-   [SerializeField] MenuPrincipal fenetreMenuPrincipal;
 
    public int userID;
    #endregion                
