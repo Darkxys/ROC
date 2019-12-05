@@ -12,10 +12,10 @@ using UnityEngine.EventSystems;
 public class MenuPrincipal : MonoBehaviour
 {
    #region Attribut
-   [SerializeField] Button btnFermuture;
    [SerializeField] Animator canvasAnimation;
    [SerializeField] DataBase _db;
    [SerializeField] GameObject UtilisateurCreation;
+   [SerializeField] GameObject QuitterBtn;
    EventSystem gestionnaire;
    #endregion
 
@@ -27,16 +27,7 @@ public class MenuPrincipal : MonoBehaviour
    #endregion
 
    #region Méthode publique
-
-   /// <summary>
-   /// Permettre à l’utilisateur de fermer l’application par l’option.
-   /// </summary>
-   public void fermetureApplication()
-   {
-      Application.Quit();
-   }
-
-   public void entrerMenuCreationCompte()
+   public void entrerMenuCreationCompte()                                                            
    {
       // On met la zone saisis d'utilisateur active.
       gestionnaire.SetSelectedGameObject(UtilisateurCreation);
@@ -45,6 +36,14 @@ public class MenuPrincipal : MonoBehaviour
       canvasAnimation.SetTrigger("CreationCompte");
    }
 
+   public void entrerMenuQuitter()
+   {
+      // On met le bouton quitter du menu "quitter" active.
+      gestionnaire.SetSelectedGameObject(QuitterBtn);
+
+      // On actionne l'animation pour aller au menu quitter.
+      canvasAnimation.SetTrigger("MenuQuitter");
+   }
 
    public void jouer()
    {

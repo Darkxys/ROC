@@ -43,7 +43,7 @@ public class NCreation : Notification
             vignette.GetComponent<Image>().color = couleurVignette.rougeClaire();
 
             // On change la direction du bouton de "quitter".
-            quitter.onClick.AddListener(retourConnection);
+            quitter.onClick.AddListener(retourCreationCompte);
             break;
 
          case "MotPasseDifferentCreation":
@@ -52,6 +52,17 @@ public class NCreation : Notification
 
             // on change la couleur de la vignette.
             vignette.GetComponent<Image>().color = couleurVignette.rougeClaire();
+
+            // On change la direction du bouton de "quitter".
+            quitter.onClick.AddListener(retourCreationCompte);
+            break;
+
+         case "pasInformation":
+            // On change la couleur de la vignette.
+            vignette.GetComponent<Image>().color = couleurVignette.rougeClaire();
+
+            // On change le texte de la description.
+            definition.text = "Pas d'information saisis.";
 
             // On change la direction du bouton de "quitter".
             quitter.onClick.AddListener(retourCreationCompte);
