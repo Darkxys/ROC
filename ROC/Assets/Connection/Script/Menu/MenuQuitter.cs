@@ -14,7 +14,7 @@ public class MenuQuitter : MonoBehaviour
 {
    #region Attribut
    Animator canvasAnimation;   
-   GameObject utilisateurField;
+   [SerializeField] GameObject utilisateurField;
    EventSystem gestionnaire;
    #endregion
 
@@ -24,7 +24,6 @@ public class MenuQuitter : MonoBehaviour
       // Initialisation des attributs.
       canvasAnimation = GameObject.FindGameObjectWithTag("LeCanvas").GetComponent<Animator>();
       gestionnaire = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
-      utilisateurField = GameObject.FindGameObjectWithTag("UtilisateurConnection");
    }
    #endregion
 
