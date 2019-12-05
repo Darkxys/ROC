@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using MySql.Data.MySqlClient;
 
 using UnityEngine;
@@ -245,6 +246,24 @@ public class DataBase : MonoBehaviour
       // On ferme la connection.
       connection.Close();
    }
+   
+   public void jouer(string nom)
+   {
+      
+      // On fait la connection à la base de données.
+      ConnectionBd();
 
+      // On crée la commande Sql.
+      MySqlCommand commandeSql = new MySqlCommand("SELECT * FROM utilisateurs WHERE NOM ='" + nom + "'", connection);
+
+      // on exécute la commande sql,
+      MySqlDataReader MonLecteur;
+      MonLecteur = commandeSql.ExecuteReader();
+
+      userID = (int)MonLecteur["UtilisateurID"];
+      DontDestroyOnLoad(this);
+      SceneManager.LoadScene("MenuHeros", LoadSceneMode.Single);
+
+   }
    #endregion
 }

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 #endregion
 
 public class NCreation : Notification
@@ -33,6 +34,16 @@ public class NCreation : Notification
 
             // On change la direction du bouton de "quitter".
             quitter.onClick.AddListener(retourConnection);
+
+            // On active les deux boutons d'action.
+            JouerBtn.gameObject.SetActive(true);
+            RevenirBtn.gameObject.SetActive(true);
+
+            // On change la direction du bouton de "revenir".
+            RevenirBtn.onClick.AddListener(retourConnection);
+
+            // On change la direction du bouton pour jouer.
+            JouerBtn.onClick.AddListener(retourConnection);
             break;
 
          case "GrandeurIncorrecte":
@@ -92,6 +103,11 @@ public class NCreation : Notification
    private void retourCreationCompte()
    {
       canvas.SetTrigger("RetourCreationCompte");
+   }
+
+   private void JouerJeu()
+   {
+      data.jouer(utilisateurCreationField.GetComponent<InputField>().text);
    }
    #endregion
 }

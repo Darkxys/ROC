@@ -5115,6 +5115,7 @@ MonoBehaviour:
   Utilisateur: {fileID: 777404846}
   MotDePasse: {fileID: 784238585}
   Confirmation_MotDePasse: {fileID: 1020911012}
+  JouerBtn: {fileID: 1234901760}
   manager_bd: {fileID: 1433043569}
 --- !u!1 &705507993
 GameObject:
@@ -5235,6 +5236,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &898175859 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5821967716888186017, guid: 9cfab7c0c5628b445bcf1d6255d25038,
+    type: 3}
+  m_PrefabInstance: {fileID: 1084869961324657750}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &963194225
@@ -5523,6 +5536,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   utilisateurConnexion: {fileID: 228515828}
+  JouerBtn: {fileID: 1234901761}
+  RevenirBtn: {fileID: 898175859}
+  data: {fileID: 1433043569}
+--- !u!1 &1234901760 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 45906161519031258, guid: 9cfab7c0c5628b445bcf1d6255d25038,
+    type: 3}
+  m_PrefabInstance: {fileID: 1084869961324657750}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1234901761 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2831184737270045421, guid: 9cfab7c0c5628b445bcf1d6255d25038,
+    type: 3}
+  m_PrefabInstance: {fileID: 1084869961324657750}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234901760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1368386621
 GameObject:
   m_ObjectHideFlags: 0
@@ -6009,6 +6043,7 @@ MonoBehaviour:
   Utilisateur: {fileID: 777404846}
   MotDePasse: {fileID: 784238585}
   Confirmation_MotDePasse: {fileID: 1020911012}
+  JouerBtn: {fileID: 1234901760}
   manager_bd: {fileID: 1433043569}
 --- !u!114 &1848325369 stripped
 MonoBehaviour:
@@ -10826,6 +10861,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   utilisateurConnexion: {fileID: 228515828}
+  JouerBtn: {fileID: 1234901761}
+  RevenirBtn: {fileID: 898175859}
+  data: {fileID: 1433043569}
   utilisateurCreationField: {fileID: 728391639}
 --- !u!1 &2120470615
 GameObject:

@@ -21,6 +21,7 @@ public class CreationCompte : MonoBehaviour
    [SerializeField] InputField Utilisateur;
    [SerializeField] InputField MotDePasse;
    [SerializeField] InputField Confirmation_MotDePasse;
+   [SerializeField] GameObject JouerBtn;
    #endregion
 
    #region Constances
@@ -40,7 +41,7 @@ public class CreationCompte : MonoBehaviour
    private void Awake()
    {
       // On initialise la variable system.
-      systeme = EventSystem.current;
+      systeme = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
       notification = GameObject.FindGameObjectWithTag("NoCreation").GetComponent<NCreation>();
    }
 
@@ -59,6 +60,7 @@ public class CreationCompte : MonoBehaviour
          switch(reponse)
          {
             case "Réussi":
+               systeme.SetSelectedGameObject(JouerBtn);
                notification.chargementinfoNotification("CreationCompteReussi");
                break;
 

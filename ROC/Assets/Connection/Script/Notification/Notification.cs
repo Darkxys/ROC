@@ -26,6 +26,11 @@ public abstract class Notification : MonoBehaviour
    public GameObject vignette { get; set; }
 
    public GameObject utilisateurConnexion;
+
+   public Button JouerBtn;
+   public Button RevenirBtn;
+   public DataBase data;
+
    #endregion
 
    #region Méthode Unité
@@ -46,6 +51,14 @@ public abstract class Notification : MonoBehaviour
    {
       // On enlève toutes les anciennes fonctions du bouton « quitter ».
       quitter.onClick.RemoveAllListeners();
+
+      // On enlève les fonctions des boutons de jouer et revenir.
+      JouerBtn.onClick.RemoveAllListeners();
+      RevenirBtn.onClick.RemoveAllListeners();
+
+      // On disparait les deux boutons d'action.
+      JouerBtn.gameObject.SetActive(false);
+      RevenirBtn.gameObject.SetActive(false);
    }
    #endregion
 
