@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 public abstract class Notification : MonoBehaviour
 {
    #region Attribut
-   public Animator canvas { get; private set; }   
+   public Animator canvas;   
 
    public VignetteCouleur couleurVignette { get; private set; }
    
@@ -21,7 +21,7 @@ public abstract class Notification : MonoBehaviour
 
    public EventSystem gestionnaireEvenement { get; private set; }
 
-   public Button quitter { get; private set; }
+   public Button quitter;
 
    public GameObject vignette { get; set; }
 
@@ -79,12 +79,6 @@ public abstract class Notification : MonoBehaviour
    {
       // On relie la variable "description" au champs texte "description" de la notification.
       definition = GameObject.FindGameObjectWithTag("NDescription").GetComponent<Text>();
-
-      // On relie la variable "quitterbtn" avec le boutton "quitter" de la notification.
-      quitter = GameObject.FindGameObjectWithTag("NQuitter").GetComponent<Button>();
-
-      // On relie l'animation du canvas avec "canvas".
-      canvas = GameObject.FindGameObjectWithTag("LeCanvas").GetComponent<Animator>();
 
       // On relie la variable "vignette" a l'entête de la notification.
       vignette = GameObject.FindGameObjectWithTag("NVignette");

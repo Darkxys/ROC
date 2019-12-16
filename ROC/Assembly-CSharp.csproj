@@ -65,14 +65,19 @@
   <ItemGroup>
     <Compile Include="Assets\Connection\Amazing UI\Scene\Scripts\ColorController.cs" />
     <Compile Include="Assets\Connection\Amazing UI\Scripts\ToggleAnimatorController.cs" />
-    <Compile Include="Assets\Connection\Script\Connection.cs" />
-    <Compile Include="Assets\Connection\Script\CreationCompte.cs" />
     <Compile Include="Assets\Connection\Script\DatabaseManager.cs" />
-    <Compile Include="Assets\Connection\Script\MenuPrincipal.cs" />
-    <Compile Include="Assets\Connection\Script\Notification.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\ConfirmationSuppresion.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\CreationCompte.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\MenuHero.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\MenuPrincipal.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\MenuQuitter.cs" />
+    <Compile Include="Assets\Connection\Script\Menu\MenuSauvegarde.cs" />
+    <Compile Include="Assets\Connection\Script\Notification\NConnexion.cs" />
+    <Compile Include="Assets\Connection\Script\Notification\NCreation.cs" />
+    <Compile Include="Assets\Connection\Script\Notification\NHeros.cs" />
+    <Compile Include="Assets\Connection\Script\Notification\Notification.cs" />
     <Compile Include="Assets\Connection\Script\Outil\DataBase.cs" />
     <Compile Include="Assets\Connection\Script\Outil\Naviguation.cs" />
-    <Compile Include="Assets\Connection\Script\Outil\Tabulation.cs" />
     <Compile Include="Assets\Connection\Script\Outil\VignetteCouleur.cs" />
     <Compile Include="Assets\itemBuy1.cs" />
     <Compile Include="Assets\ItemsHandler.cs" />

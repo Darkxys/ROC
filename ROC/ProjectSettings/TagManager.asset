@@ -33,6 +33,21 @@ TagManager:
   - btnClone
   - PanelDetail
   - ListeContent
+  - UtilisateurConnection
+  - NQuitter
+  - NVignette
+  - NDescription
+  - EventSystem
+  - LeCanvas
+  - NoCreation
+  - CVignette
+  - CSauvegarde
+  - HQuitter
+  - btnSauvegarde
+  - InfoHero
+  - Container
+  - UtilisateurMotPasse
+  - NConnexion
   layers:
   - Default
   - TransparentFX

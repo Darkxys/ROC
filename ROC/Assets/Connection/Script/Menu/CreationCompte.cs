@@ -57,13 +57,17 @@ public class CreationCompte : MonoBehaviour
       if(validation)
       {
          // On crée l'utilisateur et on reçois la réponse de la base de donnée.
-         string reponse = manager_bd.CreationCompte();
+         string reponse = manager_bd.CreationCompte(Utilisateur.text,MotDePasse.text);
 
          // On analyse la réponse de la base de donnée.
          switch(reponse)
          {
             case "Réussi":
+
+               // On sélectionne le bouton jouer.
                systeme.SetSelectedGameObject(JouerBtn);
+
+               // On active la notification de la création de compte a réussi.
                notification.chargementinfoNotification("CreationCompteReussi");
                break;
 
@@ -74,7 +78,6 @@ public class CreationCompte : MonoBehaviour
       }
 
    }
-   #endregion
 
    public void retourMenu()
    {
@@ -82,7 +85,7 @@ public class CreationCompte : MonoBehaviour
       canvas.SetTrigger("RetourLogin");
 
    }
-
+   #endregion
    #region Méthode privé
    private bool verificationCondition()
    {

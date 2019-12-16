@@ -42,6 +42,7 @@ public class Game : MonoBehaviour
         lstMap.Add(_coll);
         lstMap.Add(_air);
 
+
         _handler = GameObject.FindGameObjectWithTag("Saver").GetComponent<SaveHandler>();
         _level = _handler.levelDungeon;
         _textLvl.text += _level;

@@ -7,6 +7,7 @@ public class SaveDB
 {
     public MySqlConnection con;
     public int userID;
+
     public SaveDB()
     {
         GameObject go = GameObject.FindWithTag("Connector");
@@ -16,7 +17,9 @@ public class SaveDB
             con.Open();
             userID = go.GetComponent<DataBase>().userID;
 
-            GameObject.Destroy(go);
+            go.SetActive(false);
+            
+            //GameObject.Destroy(go);
         }
         else
         {

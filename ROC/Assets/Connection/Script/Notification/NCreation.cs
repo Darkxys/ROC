@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 public class NCreation : Notification
 {
-   #region Variable
+   #region Attribut
    [SerializeField] GameObject utilisateurCreationField;
    #endregion
 
@@ -43,7 +43,7 @@ public class NCreation : Notification
             RevenirBtn.onClick.AddListener(retourConnection);
 
             // On change la direction du bouton pour jouer.
-            JouerBtn.onClick.AddListener(retourConnection);
+            JouerBtn.onClick.AddListener(JouerJeu);
             break;
 
          case "GrandeurIncorrecte":

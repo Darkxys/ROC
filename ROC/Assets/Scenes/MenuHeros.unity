@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1528662909}
+      - m_Target: {fileID: 0}
         m_MethodName: Delete
         m_Mode: 1
         m_Arguments:
@@ -2408,7 +2408,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1528662909}
+      - m_Target: {fileID: 0}
         m_MethodName: Return
         m_Mode: 1
         m_Arguments:
@@ -2795,7 +2795,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1528662909}
+      - m_Target: {fileID: 0}
         m_MethodName: Create
         m_Mode: 1
         m_Arguments:

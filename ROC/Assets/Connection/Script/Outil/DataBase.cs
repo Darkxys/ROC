@@ -24,6 +24,7 @@ public class DataBase : MonoBehaviour
    const string NOM_FICHIER_CONFIG = "Config.txt";
    #endregion
 
+
    #region Connecteur
    string host;
    string database;
@@ -32,14 +33,8 @@ public class DataBase : MonoBehaviour
    public MySqlConnection connection;
    #endregion
 
-   [SerializeField] InputField nomField;
-   [SerializeField] InputField passwordField;
-
-   [SerializeField] InputField nomCreationField;
-   [SerializeField] InputField passwordCreationField;
-   [SerializeField] InputField confirmationMotDePasseField;
-
-   [SerializeField] NConnexion fenetrenotification;
+   [SerializeField] Animator canvas;
+   [SerializeField] GameObject controllerSauvegarde;
 
    public int userID;
    #endregion                
@@ -145,13 +140,13 @@ public class DataBase : MonoBehaviour
    #endregion
 
    #region Méthode publique
-   public string CreationCompte()
+   public string CreationCompte(string nom, string motDePasse)
    {
       // On ouvre la connection.
       ConnectionBd();
 
       // On crée la commande de vérification.
-      MySqlCommand verification = new MySqlCommand("SELECT Nom FROM utilisateurs WHERE Nom='" + nomCreationField.text + "'", connection);
+      MySqlCommand verification = new MySqlCommand("SELECT Nom FROM utilisateurs WHERE Nom='" + nom + "'", connection);
 
       // On ouvre la lecture des données de la table de la base de données.
       MySqlDataReader Malecture;
@@ -172,19 +167,18 @@ public class DataBase : MonoBehaviour
             return "Utilisateur existe";
          }
       }
-
-      // On ferme la requête.
       Malecture.Close();
 
       // On fait la requête pour crée l'utilisateur.
-      string requete = "INSERT INTO utilisateurs VALUES (default,'" + nomCreationField.text + "','" + passwordCreationField.text + "')";
+      string requete = "INSERT INTO utilisateurs VALUES (default,'" + nom + "','" + motDePasse + "')";
       MySqlCommand commandeInsertion = new MySqlCommand(requete, connection);
+
 
       // Si la requête fonctionne pas, on envoie une erreur dans la console
       try
       {
          // On envoie la requête a la base données.
-         commandeInsertion.ExecuteReader();
+         Malecture = commandeInsertion.ExecuteReader();
       }
       catch
       {
@@ -192,7 +186,7 @@ public class DataBase : MonoBehaviour
       }
 
       // On ferme la commande.
-      commandeInsertion.Dispose();
+      Malecture.Close();
 
       // On ferme la connection.
       connection.Close();
@@ -202,7 +196,7 @@ public class DataBase : MonoBehaviour
    }
 
 
-   public void Connection()
+   public string Connection(string nom, string motDePasse)
    {
       // On fait la connection à la base de données.
       ConnectionBd();
@@ -210,12 +204,12 @@ public class DataBase : MonoBehaviour
       // On crée une variable temporaire pour le mot de passe.
       string tempMotDePasse = null;
 
-      if (nomField.text == "" && passwordField.text == "")
-         fenetrenotification.chargementinfoNotification("pasInformation");
+      if (nom == "" && motDePasse == "")
+         return "pasInformation";
       else
       {
          // On crée la commande Sql.
-         MySqlCommand commandeSql = new MySqlCommand("SELECT * FROM utilisateurs WHERE NOM ='" + nomField.text + "'", connection);
+         MySqlCommand commandeSql = new MySqlCommand("SELECT * FROM utilisateurs WHERE NOM ='" + nom + "'", connection);
 
          // on exécute la commande sql,
          MySqlDataReader MonLecteur;
@@ -228,28 +222,37 @@ public class DataBase : MonoBehaviour
             tempMotDePasse = MonLecteur["motdepasse"].ToString();
 
             // On vérifie si le mot de passe est valide.
-            if (tempMotDePasse == passwordField.text)
+            if (tempMotDePasse == motDePasse)
             {
+               // On initialise la variable "userID".
                userID = (int)MonLecteur["UtilisateurID"];
-               DontDestroyOnLoad(this);
-               SceneManager.LoadScene("MenuHeros", LoadSceneMode.Single);
 
+               // On ferme la commande sql.
+               MonLecteur.Close();
+
+               // On ferme la connection.
+               connection.Close();
+
+               return "Jouer";
             }
             else
-               fenetrenotification.chargementinfoNotification("mauvaisMotDePasse");
-         }
+            {
+               // On ferme la commande sql.
+               MonLecteur.Close();
 
-         // On ferme la commande sql.
-         MonLecteur.Close();
+               // On ferme la connection.
+               connection.Close();
+
+               return "mauvaisMotDePasse";
+            }
+         }
       }
 
-      // On ferme la connection.
-      connection.Close();
+      return "666";
    }
-   
+
    public void jouer(string nom)
    {
-      
       // On fait la connection à la base de données.
       ConnectionBd();
 
@@ -260,9 +263,30 @@ public class DataBase : MonoBehaviour
       MySqlDataReader MonLecteur;
       MonLecteur = commandeSql.ExecuteReader();
 
-      userID = (int)MonLecteur["UtilisateurID"];
-      DontDestroyOnLoad(this);
-      SceneManager.LoadScene("MenuHeros", LoadSceneMode.Single);
+      while (MonLecteur.Read())
+      {
+         // On initialise la variable "userID".
+         userID = (int)MonLecteur["UtilisateurID"];
+
+         // On ferme la commande sql.
+         MonLecteur.Close();
+
+         // On ferme la connection.
+         connection.Close();
+
+         controllerSauvegarde.SetActive(true);
+
+         // Si la connexion est fermée du contrôler, fait ceci.
+         if (controllerSauvegarde.GetComponent<SaveHandler>()._dbHandler.con.State.ToString() == "Closed")
+            controllerSauvegarde.GetComponent<SaveHandler>().changerList();
+
+         // On envoie l'utilisateur dans le menu d'héros.
+         canvas = GameObject.FindGameObjectWithTag("LeCanvas").GetComponent<Animator>();
+         canvas.SetTrigger("MenuHero");
+
+         break;
+      }
+
 
    }
    #endregion

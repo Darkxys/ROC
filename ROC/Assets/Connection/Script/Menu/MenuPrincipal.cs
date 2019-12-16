@@ -13,20 +13,66 @@ public class MenuPrincipal : MonoBehaviour
 {
    #region Attribut
    [SerializeField] Animator canvasAnimation;
-   [SerializeField] DataBase _db;
+   DataBase _db;
    [SerializeField] GameObject UtilisateurCreation;
    [SerializeField] GameObject QuitterBtn;
+   [SerializeField] GameObject controllerSauvegarde;
+   [SerializeField] NConnexion notification;
+
+   InputField nomField;
+   InputField passwordField;
+
    EventSystem gestionnaire;
    #endregion
 
    #region Méthode Unité
+
    private void Awake()
    {
       gestionnaire = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
+      _db = GameObject.FindGameObjectWithTag("Connector").GetComponent<DataBase>();
+      nomField = GameObject.FindGameObjectWithTag("UtilisateurConnection").GetComponent<InputField>();
+      passwordField = GameObject.FindGameObjectWithTag("UtilisateurMotPasse").GetComponent<InputField>();
+   }
+
+   private void Update()
+   {
+      if(Input.GetKeyDown(KeyCode.KeypadEnter))
+      {
+         connexion();
+      }
    }
    #endregion
 
    #region Méthode publique
+   public void connexion()
+   {
+      string connexion = _db.Connection(nomField.text, passwordField.text);
+
+      // On efface les info du nom et du mot de passe.
+      nomField.text = passwordField.text = "";
+
+      switch(connexion)
+      {
+         case "pasInformation":
+            notification.chargementinfoNotification(connexion);
+            break;
+
+         case "mauvaisMotDePasse":
+            notification.chargementinfoNotification(connexion);
+            break;
+
+         case "Jouer":
+            controllerSauvegarde.SetActive(true);
+
+            if (controllerSauvegarde.GetComponent<SaveHandler>()._dbHandler.con.State.ToString() == "Closed")
+               controllerSauvegarde.GetComponent<SaveHandler>().changerList();
+
+            canvasAnimation.SetTrigger("MenuHero");
+            break;
+      }
+   }
+
    public void entrerMenuCreationCompte()                                                            
    {
       // On met la zone saisis d'utilisateur active.
@@ -43,12 +89,6 @@ public class MenuPrincipal : MonoBehaviour
 
       // On actionne l'animation pour aller au menu quitter.
       canvasAnimation.SetTrigger("MenuQuitter");
-   }
-
-   public void jouer()
-   {
-      DontDestroyOnLoad(_db);
-      SceneManager.LoadScene("MenuHeros", LoadSceneMode.Single);
    }
    #endregion
 }
