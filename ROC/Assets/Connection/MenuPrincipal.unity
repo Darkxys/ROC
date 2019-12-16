@@ -5823,6 +5823,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: MenuHero
       objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 177.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006750467087244988, guid: b5e41106bd909014db92910fbf8a2bf9,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4642263082271678081, guid: b5e41106bd909014db92910fbf8a2bf9,
         type: 3}
       propertyPath: utilisateurConnexion
